@@ -46,4 +46,68 @@ if __name__ == '__main__':
 
     # 图像融合
     img_merge=img_oper.img_merge(img,img2)
-    img_oper.cv_show("merge",img_merge)
+    # img_oper.cv_show("merge",img_merge)
+
+    # 阈值处理
+    img_thresh=img_oper.threshold_process(img,127,255,cv2.THRESH_TOZERO_INV)
+    # ret,img_thresh=cv2.threshold(img,127,255,cv2.THRESH_BINARY)
+    # img_oper.cv_show("thresh",img_thresh)
+    # img_oper.plt_show(img_thresh)
+    # cv2.imshow("thresh",img_thresh)
+    # cv2.waitKey(0)
+
+    # 图像平滑处理
+    # 均值滤波
+    blur_img=img_oper.img_blur_mean(img)
+    # img_oper.cv_show("mean",blur_img)
+    # 方框滤波
+    box_blur_img=img_oper.img_box_blur(img)
+    # img_oper.cv_show("box_blur_img",box_blur_img)
+    # 高斯滤波
+    gauss_blur_img=img_oper.img_gauss_blur(img)
+    # img_oper.cv_show("gauss_img",gauss_blur_img)
+    # 中值滤波
+    median_blur_img=img_oper.img_median_blur(img)
+    # img_oper.cv_show("median_img",median_blur_img)
+    # 集体展示
+    imgs=img_oper.show_imgs(box_blur_img,gauss_blur_img,median_blur_img)
+    # img_oper.cv_show("imgs",imgs)
+
+    # 形态学操作
+    # 腐蚀/削弱
+    erode_img=img_oper.erode_oper(img)
+    # img_oper.cv_show("erode_img",erode_img)
+    # 膨胀
+    dilate_img=img_oper.dilate(img)
+    # img_oper.cv_show("dilate",dilate_img)
+    # 形态学变化：开运算和闭运算
+    # 开运算
+    morphology_open_img=img_oper.morphology_open(img)
+    # img_oper.cv_show("morphology_open",morphology_open_img)
+    # 闭运算
+    morphology_close_img=img_oper.morphology_close(img)
+    # img_oper.cv_show("morphology_close",morphology_close_img)
+    # 图像梯度，提取图像轮廓，边缘位置才能产生梯度
+    gradient_img=img_oper.gradient_img(img)
+    # img_oper.cv_show("grad",gradient_img)
+    # 礼帽，提取毛刺
+    tophat_img=img_oper.tophat_img(img)
+    # img_oper.cv_show("tophat",tophat_img)
+    # 黑帽，
+    blackhat_img=img_oper.blackhat_img(img)
+    img_oper.cv_show("blackhat",blackhat_img)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

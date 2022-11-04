@@ -178,6 +178,112 @@ def img_merge(img1,img2):
     return img_merged
 
 
+def threshold_process(img,thresh,maxval,type):
+    '''
+
+    :param img:
+    :param thresh:
+    :param maxval:
+    :param type:cv2.THRESH_
+    :return:
+    '''
+    # 图像阈值处理，对于大于阈值的值怎么处理，处理方法，怎么判断阈值，以及怎么处理
+    ret, imgthresh=cv2.threshold(img,thresh,maxval,type)
+    return imgthresh
+
+
+def plt_show(img):
+    # plt
+    plt.figure("fig")
+    plt.imshow(img)
+    plt.show()
+    return 0
+
+
+def img_blur_mean(img):
+    # 均值滤波,把3*3的滤波器和对应像素相乘相加
+    blur_img=cv2.blur(img,(3,3))
+    return blur_img
+
+
+def img_box_blur(img):
+    # 方框滤波
+    box_blur_img=cv2.boxFilter(img,-1,(3,3),normalize=True)
+    return box_blur_img
+
+
+def img_gauss_blur(img):
+    # 权重矩阵，离越近，越权重大,卷积核数值满足高斯分布，更重视中间的像素值
+    gauss_blur_img=cv2.GaussianBlur(img,(3,3),1)
+    return gauss_blur_img
+
+
+def img_median_blur(img):
+    '''
+
+    :param img:'ksize' is required to be an integer
+    :return:
+    '''
+    # 中值滤波，即找到中位数的像素值,去掉椒盐，抑制噪声点
+    median_blur_img=cv2.medianBlur(img,3)
+    return median_blur_img
+
+
+def show_imgs(img1,img2,img3):
+    # 把所有图像展示在一起
+    imgs=np.hstack((img1,img2,img3))
+    return imgs
+
+
+def erode_oper(img):
+    # 形态学操作，腐蚀操作,往里缩一些,削弱，去毛刺，变小
+    # 生成一个卷积核
+    kernel=np.ones((3,3),np.uint8)
+    erode_img=cv2.erode(img,kernel,iterations=5)
+    return erode_img
+
+
+def dilate(img):
+    # 膨胀
+    kernel=np.ones((3,3),np.uint8)
+    dilate_img=cv2.dilate(img,kernel,iterations=5)
+    return dilate_img
+
+
+def morphology_open(img):
+    # 开运算：先腐蚀后膨胀
+    kernel=np.ones((3,3),np.uint8)
+    morphology_open_img=cv2.morphologyEx(img,cv2.MORPH_OPEN,kernel)
+    return morphology_open_img
+
+
+def morphology_close(img):
+    # 闭运算：先膨胀后腐蚀
+    kernel=np.ones((3,3),np.uint8)
+    morphology_close_img=cv2.morphologyEx(img,cv2.MORPH_CLOSE,kernel)
+    return morphology_close_img
+
+
+def gradient_img(img):
+    # 图像梯度，提取边缘轮廓，先膨胀后腐蚀，膨胀-腐蚀，
+    kernel = np.ones((3, 3), np.uint8)
+    morphology_grad_img = cv2.morphologyEx(img, cv2.MORPH_GRADIENT, kernel)
+    return morphology_grad_img
+
+
+def tophat_img(img):
+    # 图像礼帽，提取毛刺:原图像-开运算图像
+    kernel = np.ones((3, 3), np.uint8)
+    morphology_tophat_img = cv2.morphologyEx(img, cv2.MORPH_TOPHAT, kernel)
+    return morphology_tophat_img
+
+
+def blackhat_img(img):
+    # 图像礼帽，提取毛刺:原图像-开运算图像,提取图像轮廓
+    kernel = np.ones((3, 3), np.uint8)
+    morphology_blackhat_img = cv2.morphologyEx(img, cv2.MORPH_BLACKHAT, kernel)
+    return morphology_blackhat_img
+
 
 
 
