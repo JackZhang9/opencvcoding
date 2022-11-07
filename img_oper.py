@@ -285,6 +285,103 @@ def blackhat_img(img):
     return morphology_blackhat_img
 
 
+def sobel_gradient(img):
+    # sobel算子计算梯度,水平和竖直，高斯的理念，左右点像素值的差异，dx方向还是dy方向，只有边界的地方才有梯度
+    # 先求绝对值
+    gradient_sobel_res_x=cv2.Sobel(img,cv2.CV_64F,1,0,ksize=3)
+    gradient_sobel_res_x=cv2.convertScaleAbs(gradient_sobel_res_x)
+    gradient_sobel_res_y = cv2.Sobel(img, cv2.CV_64F, 0, 1, ksize=3)
+    gradient_sobel_res_y=cv2.convertScaleAbs(gradient_sobel_res_y)
+    gradient_sobel_res_xy=cv2.addWeighted(gradient_sobel_res_x,0.5,gradient_sobel_res_y,0.5,0)
+    return gradient_sobel_res_x,gradient_sobel_res_y,gradient_sobel_res_xy
+
+
+def scharr_gradient(img):
+    # scharr算子计算梯度，水平和竖直，算子的值更大，更敏感
+    gradient_scharr_res_x = cv2.Scharr(img, cv2.CV_64F, 1, 0)
+    gradient_scharr_res_x = cv2.convertScaleAbs(gradient_scharr_res_x)
+    gradient_scharr_res_y = cv2.Scharr(img, cv2.CV_64F, 0, 1)
+    gradient_scharr_res_y = cv2.convertScaleAbs(gradient_scharr_res_y)
+    gradient_sobel_res_xy = cv2.addWeighted(gradient_scharr_res_x, 0.5, gradient_scharr_res_y, 0.5, 0)
+    return gradient_scharr_res_x,gradient_scharr_res_y,gradient_sobel_res_xy
+
+
+def laplace_gradient(img):
+    # 缺点：对噪音点敏感，跟其他方法一起使用,求二阶导，
+    # 中间点和边缘的计算，没有x和y，也不需要把x和y求出来合并
+    gradient_laplace_res=cv2.Laplacian(img,cv2.CV_64F)
+    gradient_laplace_res=cv2.convertScaleAbs(gradient_laplace_res)
+    return gradient_laplace_res
+
+
+def canny_detect(img):
+    # 1.去噪：使用滤波器，图像平滑，过滤掉噪声，高斯滤波器,中间点大
+    # 2.求梯度：计算图像中每个像素点的梯度强度和方向，sobel算子，
+    # 3.非极大值抑制NMS：把最明显的体现出来，消除边缘检测的杂散响应，把一些概率小的框去掉
+    # 4.双阈值：只保留最真实的。梯度>maxval，处理为边界，minval<梯度<maxval，连有边界为边界，
+    # 5.抑制孤立的边缘完成边缘检测
+    canny_img=cv2.Canny(img,80,160)
+    return canny_img
+
+
+def contour_detect(img):
+    # 轮廓检测，连在一块，是一个整体
+    # 1.转换成灰度图
+    img_gray=cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+    # 2.图像阈值，二值处理，0/1
+    _,img_thresh=cv2.threshold(img_gray,127,255,cv2.THRESH_BINARY)
+    contours, hierarchy=cv2.findContours(img_thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
+    return contours, hierarchy
+
+
+def contour_draw(img,contour):
+    img_copy=img.copy()  # 复制img
+    # 输入图像，轮廓，轮廓索引-1，颜色模式blue，线条厚度
+    contour_img=cv2.drawContours(img_copy,contour,-1,(255,0,0),2)
+    return contour_img
+
+
+def template_match(img,template):
+    # 模板匹配，使用模板在原图像上从原点开始滑动，
+    # 比较像素点差异，对应位置的，如平方差，进行减法，比较差异有多少；相关系数，越等于1越相近
+    # 返回每个窗口的匹配结果
+    res=cv2.matchTemplate(img,template,cv2.TM_SQDIFF_NORMED)
+    return res
+
+
+def template_value(res):
+    min_val,max_val,min_loc,max_loc=cv2.minMaxLoc(res)
+    return min_val,max_val,min_loc,max_loc
+
+
+def draw_rectangle(img,top_left,bottom_right):
+    rec_tangle=cv2.rectangle(img,top_left,bottom_right,255,2)
+    return rec_tangle
+
+
+def gauss_pyrDown(img):
+    # 向下采样，缩小,与高斯内核相乘卷积，偶数行，列去掉
+    pyr_down=cv2.pyrDown(img)
+    return pyr_down
+
+
+def gauss_pyrUp(img):
+    # 向上采样，放大
+    pyr_up=cv2.pyrUp(img)
+    return pyr_up
+
+
+def laplace_pyr(img):
+    # laplace金字塔，先down后up,原始图像减去up_down
+    down=gauss_pyrDown(img)
+    up=gauss_pyrUp(down)
+    res=img-up
+    return res
+
+
+
+
+
 
 
 

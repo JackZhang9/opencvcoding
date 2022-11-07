@@ -3,6 +3,8 @@
 @Author  : JackZhang9
 @Time    : 2022/11/3 15:16
 '''
+import numpy as np
+
 import img_oper
 import cv2
 
@@ -13,6 +15,7 @@ import cv2
 if __name__ == '__main__':
     path="bus.jpg"
     path1="zidane.jpg"
+    path2="person.png"
     img=img_oper.img_read(path)
     img2=img_oper.img_read(path1)
     # # 查看像素矩阵，矩阵的shape
@@ -92,10 +95,85 @@ if __name__ == '__main__':
     # img_oper.cv_show("grad",gradient_img)
     # 礼帽，提取毛刺
     tophat_img=img_oper.tophat_img(img)
-    # img_oper.cv_show("tophat",tophat_img)
     # 黑帽，
     blackhat_img=img_oper.blackhat_img(img)
-    img_oper.cv_show("blackhat",blackhat_img)
+    hats_img=np.hstack((tophat_img,blackhat_img))
+    # img_oper.cv_show("hats",hats_img)
+
+    # 图像处理，梯度
+    # 求图像梯度，提取边缘,sobelx求水平边缘，sobely求竖直边缘
+    sobelx,sobely,sobelxy=img_oper.sobel_gradient(img)
+    # img_oper.cv_show("sobel_img",sobelxy)
+    # scharr算子
+    _, _, scharr=img_oper.scharr_gradient(img)
+    # img_oper.cv_show("scharr",scharr)
+    # laplace算子
+    laplace=img_oper.laplace_gradient(img)
+    img_gradient=np.hstack((img,sobelxy,scharr,laplace))
+    # img_oper.cv_show("gradient",img_gradient)
+
+    # canny边缘检测
+    canny_img=img_oper.canny_detect(img)
+    # print(type(canny_img))
+    # img_oper.cv_show("canny",canny_img)
+
+    # 图像轮廓检测
+    contours, hierarchy=img_oper.contour_detect(img)
+    contour_img=img_oper.contour_draw(img,contours)
+    # 计算轮廓面积，轮廓周长
+    print(contours[0],cv2.contourArea(contours[0]),cv2.arcLength(contours[0],True))
+    # img_oper.cv_show("contour",contour_img)
+
+    # 模板匹配
+    img=cv2.imread(path,0)
+    person_img=cv2.imread(path2,flags=0)
+    h,w=person_img.shape
+    print(h,w)  # (454, 129, 3)
+    print(img.shape)  # (1080, 810, 3)
+    res=img_oper.template_match(img,person_img)
+    print(res.shape)
+    min_val, max_val, min_loc, max_loc=img_oper.template_value(res)
+    print(min_val,max_val,min_loc,max_loc)
+    # 矩形显示
+    img=img_oper.img_read(path)
+    img2=img.copy()
+    top_left=min_loc
+    bottom_right=(top_left[0]+w,top_left[1]+h)
+    rec_tangle=img_oper.draw_rectangle(img2,top_left,bottom_right)
+    # img_oper.img_write("rectangle_img.jpg",rec_tangle)
+    # img_oper.cv_show("rectangle",rec_tangle)
+
+
+
+    # 图像金字塔
+    # 高斯金字塔
+    # 上采样，放大
+    pyrup_img=img_oper.gauss_pyrUp(img)
+    # img_oper.cv_show("up",pyrup_img)
+    # 下采样，缩小
+    pyrdonw_img=img_oper.gauss_pyrDown(img)
+    pyrdonw_img = img_oper.gauss_pyrDown(pyrdonw_img)
+    pyrdonw_img = img_oper.gauss_pyrDown(pyrdonw_img)
+    # img_oper.cv_show("down",pyrdonw_img)
+    # 拉普拉斯金字塔
+    laplace_pyr_img=img_oper.laplace_pyr(img)
+    laplace_pyr_img = img_oper.laplace_pyr(laplace_pyr_img)
+    # img_oper.cv_show("laplace",laplace_pyr_img)
+
+
+    # 直方图
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
