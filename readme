@@ -11,3 +11,6 @@ maybe you could click the star if you feel that this tutorial is useful for you,
 注意：opencv的版本必须和python的版本适配，如python3.9需要适配opencv-python的4.5.x.x系列，否则，opencv不能正常使用
 
 
+opencv c++使用VS作为IDE开发，安装的opencv3.4.5版本，然后在VS中配置好，即可在VS中使用。
+
+
