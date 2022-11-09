@@ -18,6 +18,7 @@ if __name__ == '__main__':
     path2="person.png"
     img=img_oper.img_read(path)
     img2=img_oper.img_read(path1)
+    img8=img_oper.img_read("F:\OD\opencvpy\erodeimg.png")
     # # 查看像素矩阵，矩阵的shape
     # print(img,img.shape)
     # # (1080, 810, 3)BGR的彩色图，h,w,c，高1080，宽810，通道数3
@@ -81,8 +82,13 @@ if __name__ == '__main__':
     erode_img=img_oper.erode_oper(img)
     # img_oper.cv_show("erode_img",erode_img)
     # 膨胀
-    dilate_img=img_oper.dilate(img)
-    # img_oper.cv_show("dilate",dilate_img)
+    dilate_img=img_oper.dilate(img8)
+    dilate_img1 = img_oper.dilate(dilate_img)
+    dilate_img2 = img_oper.dilate(dilate_img1)
+    dilate_img3 = img_oper.dilate(dilate_img2)
+    d_imgs=np.hstack((dilate_img,dilate_img1,dilate_img2,dilate_img3))
+    img_oper.img_write("dilate.png",d_imgs)
+    img_oper.cv_show("dilate",d_imgs)
     # 形态学变化：开运算和闭运算
     # 开运算
     morphology_open_img=img_oper.morphology_open(img)
