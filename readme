@@ -14,3 +14,4 @@ maybe you could click the star if you feel that this tutorial is useful for you,
 opencv c++使用VS作为IDE开发，安装的opencv3.4.5版本，然后在VS中配置好，即可在VS中使用。
 
 
+增加了膨胀操作和对应的示意图，示意图在文件夹dilate，更新了main文件。
